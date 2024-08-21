@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .text-center {
+            color: #343a40;
+        }
+
+        .table-striped {
+            background-color: #ffffff;
+        }
+
+        .modal-title {
+            color: #343a40;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5">Inventory Management System</h1>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="showSection('productsSection')">Manage Products</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="showSection('ordersSection')">Manage Orders</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="showSection('paymentsSection')">Manage Payments</button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="showSection('shipmentsSection')">Manage Shipments</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="showSection('reportsSection')">View Reports</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="showSection('barcodeSection')">Scan Barcode</button>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="productsSection" class="mt-5" style="display:none;">
+            <h2>Products</h2>
+            <form id="productForm">
+                <div class="mb-3">
+                    <label for="productId" class="form-label">Product ID</label>
+                    <input type="text" class="form-control" id="productId" placeholder="Enter Product ID">
+                </div>
+                <div class="mb-3">
+                    <label for="productBarcode" class="form-label">Product Barcode</label>
+                    <input type="text" class="form-control" id="productBarcode" placeholder="Enter Product Barcode">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="getProductByBarcode()">Get Product</button>
+            </form>
+            <hr>
+            <table class="table table-striped mt-4" id="productsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Barcode</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Product data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Orders Section -->
+        <div id="ordersSection" class="mt-5" style="display:none;">
+            <h2>Orders</h2>
+            <form id="orderForm">
+                <div class="mb-3">
+                    <label for="orderId" class="form-label">Order ID</label>
+                    <input type="text" class="form-control" id="orderId" placeholder="Enter Order ID">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="getOrderById()">Get Order</button>
+                <button type="button" class="btn btn-secondary" onclick="createOrder()">Create Order</button>
+                <button type="button" class="btn btn-danger" onclick="cancelOrder()">Cancel Order</button>
+            </form>
+            <hr>
+            <table class="table table-striped mt-4" id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer ID</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Order data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payments Section -->
+        <div id="paymentsSection" class="mt-5" style="display:none;">
+            <h2>Payments</h2>
+            <form id="paymentForm">
+                <div class="mb-3">
+                    <label for="paymentId" class="form-label">Payment ID</label>
+                    <input type="text" class="form-control" id="paymentId" placeholder="Enter Payment ID">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="getPaymentById()">Get Payment</button>
+                <button type="button" class="btn btn-secondary" onclick="processPayment()">Process Payment</button>
+            </form>
+            <hr>
+            <table class="table table-striped mt-4" id="paymentsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Order ID</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Payment data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Shipments Section -->
+        <div id="shipmentsSection" class="mt-5" style="display:none;">
+            <h2>Shipments</h2>
+            <form id="shipmentForm">
+                <div class="mb-3">
+                    <label for="shipmentId" class="form-label">Shipment ID</label>
+                    <input type="text" class="form-control" id="shipmentId" placeholder="Enter Shipment ID">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="getShipmentById()">Get Shipment</button>
+                <button type="button" class="btn btn-secondary" onclick="createShipment()">Create Shipment</button>
+                <button type="button" class="btn btn-warning" onclick="updateShipment()">Update Shipment</button>
+            </form>
+            <hr>
+            <table class="table table-striped mt-4" id="shipmentsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Order ID</th>
+                        <th>Status</th>
+                        <th>Tracking Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Shipment data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reportsSection" class="mt-5" style="display:none;">
+            <h2>Reports</h2>
+            <form id="reportForm">
+                <div class="mb-3">
+                    <label for="reportThreshold" class="form-label">Low Inventory Threshold</label>
+                    <input type="number" class="form-control" id="reportThreshold" placeholder="Enter Threshold">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="getLowInventoryReport()">Get Low Inventory Report</button>
+                <button type="button" class="btn btn-secondary" onclick="getProductPerformanceReport()">Get Product Performance Report</button>
+                <button type="button" class="btn btn-info" onclick="getSalesReport()">Get Sales Report</button>
+            </form>
+            <hr>
+            <table class="table table-striped mt-4" id="reportsTable">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Report data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Barcode Section -->
+        <div id="barcodeSection" class="mt-5" style="display:none;">
+            <h2>Scan Barcode</h2>
+            <form id="barcodeForm">
+                <input type="file" id="barcodeFile" name="file" class="form-control">
+                <button type="button" class="btn btn-primary mt-3" onclick="scanBarcode()">Scan</button>
+            </form>
+            <hr>
+            <div id="barcodeResult" class="mt-4">
+                <!-- Barcode result will be shown here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.container > div[id$="Section"]').forEach(section => {
+                section.style.display = section.id === sectionId ? 'block' : 'none';
+            });
+        }
+
+        function getProductByBarcode() {
+            const barcode = document.getElementById('productBarcode').value;
+            fetch(`/api/products/scan?barcode=${barcode}`)
+                .then(response => response.json())
+                .then(product => {
+                    const tableBody = document.querySelector('#productsTable tbody');
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.barcode}</td>
+                            <td>${product.name}</td>
+                            <td>${product.quantity}</td>
+                            <td>${product.price}</td>
+                        </tr>`;
+                });
+        }
+
+        function getOrderById() {
+            const orderId = document.getElementById('orderId').value;
+            fetch(`/api/orders/${orderId}`)
+                .then(response => response.json())
+                .then(order => {
+                    const tableBody = document.querySelector('#ordersTable tbody');
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td>${order.id}</td>
+                            <td>${order.customerId}</td>
+                            <td>${order.totalAmount}</td>
+                            <td>${order.status}</td>
+                        </tr>`;
+                });
+        }
+
+        function createOrder() {
+            // Implement the create order logic here
+        }
+
+        function cancelOrder() {
+            // Implement the cancel order logic here
+        }
+
+        function getPaymentById() {
+            const paymentId = document.getElementById('paymentId').value;
+            fetch(`/api/payments/${paymentId}`)
+                .then(response => response.json())
+                .then(payment => {
+                    const tableBody = document.querySelector('#paymentsTable tbody');
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td>${payment.id}</td>
+                            <td>${payment.orderId}</td>
+                            <td>${payment.amount}</td>
+                            <td>${payment.status}</td>
+                        </tr>`;
+                });
+        }
+
+        function processPayment() {
+            // Implement the process payment logic here
+        }
+
+        function getShipmentById() {
+            const shipmentId = document.getElementById('shipmentId').value;
+            fetch(`/api/shipments/${shipmentId}`)
+                .then(response => response.json())
+                .then(shipment => {
+                    const tableBody = document.querySelector('#shipmentsTable tbody');
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td>${shipment.id}</td>
+                            <td>${shipment.orderId}</td>
+                            <td>${shipment.status}</td>
+                            <td>${shipment.trackingNumber}</td>
+                        </tr>`;
+                });
+        }
+
+        function createShipment() {
+            // Implement the create shipment logic here
+        }
+
+        function updateShipment() {
+            // Implement the update shipment logic here
+        }
+
+        function getLowInventoryReport() {
+            const threshold = document.getElementById('reportThreshold').value;
+            fetch(`/api/reports/low-inventory?threshold=${threshold}`)
+                .then(response => response.json())
+                .then(report => {
+                    const tableBody = document.querySelector('#reportsTable tbody');
+                    tableBody.innerHTML = report.map(item => `
+                        <tr>
+                            <td>Low Inventory</td>
+                            <td>${item.name} (ID: ${item.id}) is low with only ${item.quantity} left.</td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function getProductPerformanceReport() {
+            fetch(`/api/reports/product-performance`)
+                .then(response => response.json())
+                .then(report => {
+                    const tableBody = document.querySelector('#reportsTable tbody');
+                    tableBody.innerHTML = report.map(item => `
+                        <tr>
+                            <td>Product Performance</td>
+                            <td>${item.name} (ID: ${item.id}) has sold ${item.unitsSold} units.</td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function getSalesReport() {
+            fetch(`/api/reports/sales`)
+                .then(response => response.json())
+                .then(report => {
+                    const tableBody = document.querySelector('#reportsTable tbody');
+                    tableBody.innerHTML = report.map(item => `
+                        <tr>
+                            <td>Sales Report</td>
+                            <td>${item.date}: ${item.totalSales} sales made.</td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function scanBarcode() {
+            const fileInput = document.getElementById('barcodeFile');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/api/barcode/scan', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        const resultDiv = document.getElementById('barcodeResult');
+                        resultDiv.innerHTML = `
+                            <p>Scanned Barcode: ${result.barcode}</p>
+                            <p>Product ID: ${result.productId}</p>
+                            <p>Product Name: ${result.productName}</p>
+                        `;
+                    });
+            }
+        }
+    </script>
+</body>
+
+</html>
